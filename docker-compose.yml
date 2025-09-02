@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: ghbuys-postgres
+    environment:
+      POSTGRES_USER: medusa
+      POSTGRES_PASSWORD: medusa_password
+      POSTGRES_DB: ghbuys
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - ghbuys-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: ghbuys-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - ghbuys-network
+
+  postgres-admin:
+    image: adminer
+    container_name: ghbuys-adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - ghbuys-network
+
+volumes:
+  postgres_data:
+
+networks:
+  ghbuys-network:
+    driver: bridge
