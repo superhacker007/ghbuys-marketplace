@@ -50,7 +50,7 @@ router.post('/register', [
   body('business_phone').custom(value => ghanaUtils.isValidPhoneNumber(value)).withMessage('Valid Ghana phone number required'),
   body('region').isIn(ghanaConfig.regions.map(r => r.name)).withMessage('Valid Ghana region required'),
   body('primary_category').isIn(ghanaConfig.categories.map(c => c.id)).withMessage('Valid category required'),
-], async (req, res) => {
+], async (req: express.Request, res: express.Response) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
